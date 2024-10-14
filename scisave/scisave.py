@@ -257,13 +257,13 @@ class _JsonNumPyDecoder(json.JSONDecoder):
 
             # parse the type
             if dtype == "complex":
-                real = np.array(data["real"], dtype=np.complex_).reshape(shape)
-                imag = np.array(data["imag"], dtype=np.complex_).reshape(shape)
+                real = np.array(data["real"], dtype=complex).reshape(shape)
+                imag = np.array(data["imag"], dtype=complex).reshape(shape)
                 return real+1j*imag
             elif dtype == "float":
-                return np.array(data, dtype=np.float_).reshape(shape)
+                return np.array(data, dtype=float).reshape(shape)
             elif dtype == "int":
-                return np.array(data, dtype=np.int_).reshape(shape)
+                return np.array(data, dtype=int).reshape(shape)
             elif dtype == "bool":
                 return np.array(data, dtype=bool).reshape(shape)
         else:
