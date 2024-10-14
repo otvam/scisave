@@ -8,20 +8,25 @@
 **SciSave** is a **Python serialization/deserialization** module:
 * Specially targeted for **scientific applications**.
 * Load **JSON/YAML configuration files**. 
-* Load and write **JSON/Pickle data files**
+* Load and write **JSON/Pickle data files**.
 
 For **YAML** files, the following **custom extensions** are used:
-* `!path` - parse relative paths (with respect to the YAML file)
-* `!include` - include other YAML files (recursion possible)
-* `!env` - include YAML string from environment variables
-* `!merge_dict` - merge a list of dicts
-* `!merge_list` - merge a list of lists
+* `!path` - parse relative paths (with respect to the YAML file).
+* `!include` - include other YAML files (recursion possible).
+* `!env` - include YAML string from environment variables.
+* `!merge_dict` - merge a list of dicts.
+* `!merge_list` - merge a list of lists.
 
 For **JSON** files, the following **custom extensions** are used:
-* `__complex__` - allows the serialization of complex numbers
-* `__numpy__` - allows the serialization of NumPy arrays
+* Allows the serialization/deserialization of complex numbers (`__complex__`).
+* Allows the serialization/deserialization of NumPy arrays (`__numpy__`).
+* Allows the serialization/deserialization as/from text and gzip files 
 
-The **JSON** files can be serialized/deserialized as/from **text and gzip** files.
+The following file extensions are used:
+* `.yaml, .yml` - for YAML files
+* `.json, .js` - for JSON text files
+* `.gz, .gzip` - for JSON gzip files
+* `.pck, .pkl, .pickle` - for Pickle files
 
 The JSON/YAML files with the custom extensions are still valid JSON/YAML files.
 
