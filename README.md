@@ -1,7 +1,8 @@
 # SciSave - Python Data Loader/Dumper for Science 
 
 > * **Repository: [github.com/otvam/scisave](https://github.com/otvam/scisave)**
-> * **Package: [pypi.org/project/scisave](https://pypi.org/project/scisave)**
+> * **PyPi: [pypi.org/project/scisave](https://pypi.org/project/scisave)**
+> * **Conda: [anaconda.org/conda-forge/scisave](https://anaconda.org/conda-forge/scisave)**
 
 ## Summary
 
@@ -54,6 +55,7 @@ An example is located in the `example` folder of the repository:
 * Tags: https://github.com/otvam/scisave/tags
 * Issues: https://github.com/otvam/scisave/issues
 * PyPi: https://pypi.org/project/scisave
+* Conda: https://anaconda.org/conda-forge/scisave
 
 ## Author
 
