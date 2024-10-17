@@ -122,8 +122,7 @@ class _YamlLoader(yaml.Loader):
         filepath = os.path.join(self.path_root, filename)
 
         # load YAML file
-        with open(filepath, "r") as fid:
-            data = _parse_yaml(fid)
+        data = _load_yaml(filepath)
 
         return data
 
@@ -365,13 +364,8 @@ def _load_yaml(filename):
     Load a YAML file (with custom extensions).
     """
 
-    try:
-        with open(filename, "r") as fid:
-            data = _parse_yaml(fid)
-    except yaml.YAMLError as ex:
-        raise RuntimeError("invalid YAML file: %s\n%s" % (filename, str(ex))) from None
-    except OSError:
-        raise OSError("cannot open the file: %s" % filename) from None
+    with open(filename, "r") as fid:
+        data = _parse_yaml(fid)
 
     return data
 
@@ -382,17 +376,12 @@ def _load_json(filename, is_gzip):
     The JSON file can be a text file or a gzip file.
     """
 
-    try:
-        if is_gzip:
-            with gzip.open(filename, "rt", encoding="utf-8") as fid:
-                data = json.load(fid, cls=_JsonNumPyDecoder)
-        else:
-            with open(filename, "r") as fid:
-                data = json.load(fid, cls=_JsonNumPyDecoder)
-    except (json.JSONDecodeError, TypeError, ValueError) as ex:
-        raise RuntimeError("invalid JSON file: %s\n%s" % (filename, str(ex))) from None
-    except OSError:
-        raise OSError("cannot open the file: %s" % filename) from None
+    if is_gzip:
+        with gzip.open(filename, "rt", encoding="utf-8") as fid:
+            data = json.load(fid, cls=_JsonNumPyDecoder)
+    else:
+        with open(filename, "r") as fid:
+            data = json.load(fid, cls=_JsonNumPyDecoder)
 
     return data
 
@@ -403,17 +392,12 @@ def _write_json(filename, data, is_gzip):
     The JSON file can be a text file or a gzip file.
     """
 
-    try:
-        if is_gzip:
-            with gzip.open(filename, "wt", encoding="utf-8") as fid:
-                json.dump(data, fid, cls=_JsonNumPyEncoder)
-        else:
-            with open(filename, "w") as fid:
-                json.dump(data, fid, indent=4, cls=_JsonNumPyEncoder)
-    except (json.JSONDecodeError, TypeError, ValueError) as ex:
-        raise RuntimeError("invalid JSON file: %s\n%s" % (filename, str(ex))) from None
-    except OSError:
-        raise OSError("cannot write the file: %s" % filename) from None
+    if is_gzip:
+        with gzip.open(filename, "wt", encoding="utf-8") as fid:
+            json.dump(data, fid, cls=_JsonNumPyEncoder)
+    else:
+        with open(filename, "w") as fid:
+            json.dump(data, fid, indent=4, cls=_JsonNumPyEncoder)
 
     return data
 
@@ -424,15 +408,8 @@ def _load_pickle(filename):
     """
 
     # load the Pickle file
-    try:
-        with open(filename, "rb") as fid:
-            data = pickle.load(fid)
-    except pickle.UnpicklingError:
-        raise RuntimeError("invalid Pickle file: %s" % filename) from None
-    except EOFError:
-        raise OSError("invalid end of file: %s" % filename) from None
-    except OSError:
-        raise OSError("cannot open the file: %s" % filename) from None
+    with open(filename, "rb") as fid:
+        data = pickle.load(fid)
 
     return data
 
@@ -443,13 +420,8 @@ def _write_pickle(filename, data):
     """
 
     # save the Pickle file
-    try:
-        with open(filename, "wb") as fid:
-            pickle.dump(data, fid)
-    except pickle.PicklingError:
-        raise RuntimeError("invalid data for Pickle: %s" % filename) from None
-    except OSError:
-        raise OSError("cannot write the file: %s" % filename) from None
+    with open(filename, "wb") as fid:
+        pickle.dump(data, fid)
 
 
 def load_config(filename):
