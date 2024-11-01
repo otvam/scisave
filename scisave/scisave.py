@@ -8,6 +8,7 @@ __author__ = "Thomas Guillod"
 __copyright__ = "Thomas Guillod - Dartmouth College"
 __license__ = "BSD License"
 
+import ast
 import os.path
 import json
 import pickle
@@ -19,8 +20,10 @@ import numpy as np
 class _YamlLoader(yaml.Loader):
     """
     This Python class offers extension to the YAML format.
-        - include YAML file in YAML file
-        - include relative filesystem paths
+        - parse relative paths (with respect to the YAML file)
+        - include other YAML files (recursion possible)
+        - evaluate a Python literal (using literal_eval)
+        - include YAML string from environment variables
         - merge list of dicts
         - merge list of lists
     """
@@ -56,6 +59,11 @@ class _YamlLoader(yaml.Loader):
             res = _YamlLoader._yaml_handling(self, node, self._extract_env)
             return res
 
+        # handling of literal evaluation
+        def fct_handle_eval(self, node):
+            res = _YamlLoader._yaml_handling(self, node, self._extract_eval)
+            return res
+
         # handling merge of a list of dicts
         def fct_handle_merge_dict(self, node):
             self.has_merge = True
@@ -71,6 +79,7 @@ class _YamlLoader(yaml.Loader):
         # add the extension to the YAML format
         _YamlLoader.add_constructor("!include", fct_handle_include)
         _YamlLoader.add_constructor("!path", fct_handle_path)
+        _YamlLoader.add_constructor("!eval", fct_handle_eval)
         _YamlLoader.add_constructor("!env", fct_handle_env)
         _YamlLoader.add_constructor("!merge_dict", fct_handle_merge_dict)
         _YamlLoader.add_constructor("!merge_list", fct_handle_merge_list)
@@ -142,6 +151,20 @@ class _YamlLoader(yaml.Loader):
 
         # load YAML string
         data = yaml.safe_load(value)
+
+        return data
+
+    def _extract_eval(self, var):
+        """
+        Evaluate a Python literal with the AST.
+        """
+
+        # check type
+        if type(var) is not str:
+            raise yaml.YAMLError("eval command arguments should be strings")
+
+        # get and check the variable
+        data = ast.literal_eval(var)
 
         return data
 

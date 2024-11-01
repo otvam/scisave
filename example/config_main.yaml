@@ -7,6 +7,10 @@
 "custom_env_a": !env ENVDATA_A
 "custom_env_b": !env ENVDATA_B
 
+# evaluate Python literal
+"custom_eval_a": !eval "1.0+1.0j"
+"custom_eval_b": !eval "1.0-1.0j"
+
 # include data from another YAML file
 "custom_include": !include config_include.yaml
 
