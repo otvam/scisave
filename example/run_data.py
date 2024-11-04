@@ -14,17 +14,17 @@ import scisave
 
 if __name__ == "__main__":
     # set environment variables (used in the config file)
-    os.environ['ENVDATA_A'] = 'data_a'
-    os.environ['ENVDATA_B'] = 'data_B'
+    os.environ['ENVDATA_A'] = 'data_env_a'
+    os.environ['ENVDATA_B'] = 'data_env_b'
 
     # set substitution variables (used in the config file)
     substitute = {
-        "sub_a": "string_a",
-        "sub_b": "string_b",
+        "sub_a": "data_sub_a",
+        "sub_b": "data_sub_b",
     }
 
     # load the configuration file with custom YAML extensions
-    tmp = scisave.load_config("config_main.yaml", substitute=substitute)
+    tmp = scisave.load_config("config_main.yaml", extension=True, substitute=substitute)
     print("======================== CONFIG")
     print(tmp)
 

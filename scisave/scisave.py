@@ -399,7 +399,7 @@ def _load_yaml(filename, extension=True, substitute=None):
     """
 
     with open(filename, "r") as fid:
-        # create loader
+        # create YAML loader (without or without extensions)
         if extension:
             loader = _YamlLoader(fid, substitute)
         else:
@@ -416,34 +416,48 @@ def _load_yaml(filename, extension=True, substitute=None):
     return data
 
 
-def _load_json(filename, is_gzip):
+def _load_json(filename, extension=True, compress=False):
     """
     Load a JSON file (with extensions).
     The JSON file can be a text file or a gzip file.
     """
 
-    if is_gzip:
+    # create JSON decoder (without or without extensions)
+    if extension:
+        cls = _JsonNumPyDecoder
+    else:
+        cls = None
+
+    # load the JSON data
+    if compress:
         with gzip.open(filename, "rt", encoding="utf-8") as fid:
-            data = json.load(fid, cls=_JsonNumPyDecoder)
+            data = json.load(fid, cls=cls)
     else:
         with open(filename, "r") as fid:
-            data = json.load(fid, cls=_JsonNumPyDecoder)
+            data = json.load(fid, cls=cls)
 
     return data
 
 
-def _write_json(filename, data, is_gzip):
+def _write_json(filename, data, extension=True, compress=False):
     """
     Write a JSON file (with extensions).
     The JSON file can be a text file or a gzip file.
     """
 
-    if is_gzip:
+    # create JSON encoder (without or without extensions)
+    if extension:
+        cls = _JsonNumPyEncoder
+    else:
+        cls = None
+
+    # write the JSON data
+    if compress:
         with gzip.open(filename, "wt", encoding="utf-8") as fid:
-            json.dump(data, fid, cls=_JsonNumPyEncoder)
+            json.dump(data, fid, cls=cls, indent=None)
     else:
         with open(filename, "w") as fid:
-            json.dump(data, fid, indent=4, cls=_JsonNumPyEncoder)
+            json.dump(data, fid, cls=cls, indent=4)
 
     return data
 
@@ -488,7 +502,7 @@ def load_config(filename, extension=True, substitute=None):
     substitute : dict
         Dictionary with the substitution.
         The key names are replaces by the values.
-        Substitution are only used for YAML files.
+        Substitutions are only used for YAML files.
 
     Returns
     -------
@@ -498,9 +512,9 @@ def load_config(filename, extension=True, substitute=None):
 
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
-        data = _load_json(filename, False)
+        data = _load_json(filename, extension=extension, compress=False)
     elif ext in [".gz", ".gzip"]:
-        data = _load_json(filename, True)
+        data = _load_json(filename, extension=extension, compress=True)
     elif ext in [".yaml", ".yml"]:
         data = _load_yaml(filename, extension=extension, substitute=substitute)
     else:
@@ -530,9 +544,9 @@ def load_data(filename):
 
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
-        data = _load_json(filename, False)
+        data = _load_json(filename, extension=True, compress=False)
     elif ext in [".gz", ".gzip"]:
-        data = _load_json(filename, True)
+        data = _load_json(filename, extension=True, compress=True)
     elif ext in [".pck", ".pkl", ".pickle"]:
         data = _load_pickle(filename)
     else:
@@ -559,9 +573,9 @@ def write_data(filename, data):
 
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
-        _write_json(filename, data, False)
+        _write_json(filename, data, extension=True, compress=False)
     elif ext in [".gz", ".gzip"]:
-        _write_json(filename, data, True)
+        _write_json(filename, data, extension=True, compress=True)
     elif ext in [".pck", ".pkl", ".pickle"]:
         _write_pickle(filename, data)
     else:
