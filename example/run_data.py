@@ -33,7 +33,7 @@ if __name__ == "__main__":
         "complex_scalar": 3+4j,
         "int_array": np.array([1, 2, 3]),
         "float_array": np.array([1.0, 2.0, 3.0]),
-        "complex_arraz": np.array([1+1j, 2+2j, 3+3j]),
+        "complex_array": np.array([1+1j, 2+2j, 3+3j]),
         "bool_array": np.array([True, False, True]),
         "multi_array": np.array([[1, 2], [3, 4]]),
     }

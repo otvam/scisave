@@ -28,7 +28,7 @@
             3.0
         ]
     },
-    "complex_arraz": {
+    "complex_array": {
         "__numpy__": null,
         "dtype": "complex",
         "shape": [

@@ -426,7 +426,7 @@ def _load_json(filename, extension=True, compress=False):
     if extension:
         cls = _JsonNumPyDecoder
     else:
-        cls = None
+        cls = json.JSONDecoder
 
     # load the JSON data
     if compress:
@@ -449,7 +449,7 @@ def _write_json(filename, data, extension=True, compress=False):
     if extension:
         cls = _JsonNumPyEncoder
     else:
-        cls = None
+        cls = json.JSONEncoder
 
     # write the JSON data
     if compress:
