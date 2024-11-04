@@ -15,7 +15,8 @@ For **YAML** files, the following **custom extensions** are used:
 * `!path` - parse relative paths (with respect to the YAML file).
 * `!include` - include other YAML files (recursion possible).
 * `!eval` - evaluate a Python literal (using literal_eval).
-* `!env` - include YAML string from environment variables.
+* `!env` - substitute YAML strings with values from environment variables.
+* `!sub` - substitute YAML strings with values from a provided dictionary.
 * `!merge_dict` - merge a list of dicts.
 * `!merge_list` - merge a list of lists.
 

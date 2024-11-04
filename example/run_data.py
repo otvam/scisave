@@ -17,8 +17,14 @@ if __name__ == "__main__":
     os.environ['ENVDATA_A'] = 'data_a'
     os.environ['ENVDATA_B'] = 'data_B'
 
+    # set substitution variables (used in the config file)
+    substitute = {
+        "sub_a": "string_a",
+        "sub_b": "string_b",
+    }
+
     # load the configuration file with custom YAML extensions
-    tmp = scisave.load_config("config_main.yaml")
+    tmp = scisave.load_config("config_main.yaml", substitute=substitute)
     print("======================== CONFIG")
     print(tmp)
 

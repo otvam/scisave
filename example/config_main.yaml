@@ -11,6 +11,10 @@
 "custom_eval_a": !eval "1.0+1.0j"
 "custom_eval_b": !eval "1.0-1.0j"
 
+# evaluate Python literal
+"custom_sub_a": !sub sub_a
+"custom_sub_b": !sub sub_b
+
 # include data from another YAML file
 "custom_include": !include config_include.yaml
 

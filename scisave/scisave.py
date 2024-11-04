@@ -23,12 +23,13 @@ class _YamlLoader(yaml.Loader):
         - parse relative paths (with respect to the YAML file)
         - include other YAML files (recursion possible)
         - evaluate a Python literal (using literal_eval)
-        - include YAML string from environment variables
+        - substitute YAML strings with values from environment variables
+        - substitute YAML strings with values from a provided dictionary
         - merge list of dicts
         - merge list of lists
     """
 
-    def __init__(self, stream):
+    def __init__(self, stream, substitute):
         """
         Constructor.
         Custom YAML loader subclassing the default loader.
@@ -37,6 +38,7 @@ class _YamlLoader(yaml.Loader):
         # get the path of the YAML file for relative paths
         self.path_root = os.path.abspath(stream.name)
         self.path_root = os.path.dirname(self.path_root)
+        self.substitute = substitute
 
         # flag indicating if any merge commands are used
         self.has_merge = False
@@ -54,9 +56,14 @@ class _YamlLoader(yaml.Loader):
             res = _YamlLoader._yaml_handling(self, node, self._extract_path)
             return res
 
-        # handling of environment variables inclusion
+        # handling of string substitution from environment variables
         def fct_handle_env(self, node):
             res = _YamlLoader._yaml_handling(self, node, self._extract_env)
+            return res
+
+        # handling of string substitution from dictionary values
+        def fct_handle_sub(self, node):
+            res = _YamlLoader._yaml_handling(self, node, self._extract_sub)
             return res
 
         # handling of literal evaluation
@@ -81,6 +88,7 @@ class _YamlLoader(yaml.Loader):
         _YamlLoader.add_constructor("!path", fct_handle_path)
         _YamlLoader.add_constructor("!eval", fct_handle_eval)
         _YamlLoader.add_constructor("!env", fct_handle_env)
+        _YamlLoader.add_constructor("!sub", fct_handle_sub)
         _YamlLoader.add_constructor("!merge_dict", fct_handle_merge_dict)
         _YamlLoader.add_constructor("!merge_list", fct_handle_merge_list)
 
@@ -131,13 +139,13 @@ class _YamlLoader(yaml.Loader):
         filepath = os.path.join(self.path_root, filename)
 
         # load YAML file
-        data = _load_yaml(filepath)
+        data = _load_yaml(filepath, self.substitute)
 
         return data
 
     def _extract_env(self, name):
         """
-        Load a YAML file from an environment variable.
+        Replace a string with a YAML data contained in an environment variable.
         """
 
         # check type
@@ -151,6 +159,24 @@ class _YamlLoader(yaml.Loader):
 
         # load YAML string
         data = yaml.safe_load(value)
+
+        return data
+
+    def _extract_sub(self, name):
+        """
+        Replace a string with a Python data contained in a provided dictionary.
+        """
+
+        # check type
+        if type(name) is not str:
+            raise yaml.YAMLError("sub command arguments should be strings")
+
+        # get and check the variable
+        if name not in self.substitute:
+            raise yaml.YAMLError("sub variable is not existing: %s" % name)
+
+        # load YAML string
+        data = self.substitute[name]
 
         return data
 
@@ -362,33 +388,23 @@ def _merge_data(data):
     return data
 
 
-def _parse_yaml(stream):
+def _load_yaml(filename, substitute):
     """
     Load a YAML stream (with custom extensions).
     If required, merge the data (custom merge commands).
     """
 
-    # create loader
-    loader = _YamlLoader(stream)
-
-    # parse, merge, and clean
-    try:
-        data = loader.get_single_data()
-        if loader.has_merge:
-            data = _merge_data(data)
-    finally:
-        loader.dispose()
-
-    return data
-
-
-def _load_yaml(filename):
-    """
-    Load a YAML file (with custom extensions).
-    """
-
     with open(filename, "r") as fid:
-        data = _parse_yaml(fid)
+        # create loader
+        loader = _YamlLoader(fid, substitute)
+
+        # parse, merge, and clean
+        try:
+            data = loader.get_single_data()
+            if loader.has_merge:
+                data = _merge_data(data)
+        finally:
+            loader.dispose()
 
     return data
 
@@ -447,18 +463,22 @@ def _write_pickle(filename, data):
         pickle.dump(data, fid)
 
 
-def load_config(filename):
+def load_config(filename, substitute=None):
     """
     Load a configuration file (JSON or YAML).
 
     Parameters
     ----------
-    filename : string)
+    filename : string
         Name and path of the file to be loaded.
         The file type is determined by the extension.
         For YAML files, the extension should be "yaml" or "yml".
         For JSON files, the extension should be "json" or "js".
         For GZIP/JSON files, the extension should be "gzip" or "gz".
+    substitute : dict
+        Dictionary with the substitution.
+        The key names are replaces by the values.
+        Substitution are only used for YAML files.
 
     Returns
     -------
@@ -466,13 +486,17 @@ def load_config(filename):
         Python data contained in the file content
     """
 
+    # empty substitution
+    if substitute is None:
+        substitute = dict()
+
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
         data = _load_json(filename, False)
     elif ext in [".gz", ".gzip"]:
         data = _load_json(filename, True)
     elif ext in [".yaml", ".yml"]:
-        data = _load_yaml(filename)
+        data = _load_yaml(filename, substitute)
     else:
         raise ValueError("invalid file extension: %s" % filename)
 
@@ -485,7 +509,7 @@ def load_data(filename):
 
     Parameters
     ----------
-    filename : string)
+    filename : string
         Name and path of the file to be loaded.
         The file type is determined by the extension.
         For JSON files, the extension should be "json" or "js".
@@ -517,7 +541,7 @@ def write_data(filename, data):
 
     Parameters
     ----------
-    filename : string)
+    filename : string
         Name and path of the file to be created.
         The file type is determined by the extension.
         For JSON files, the extension should be "json" or "js".
