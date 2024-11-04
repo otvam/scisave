@@ -139,7 +139,7 @@ class _YamlLoader(yaml.Loader):
         filepath = os.path.join(self.path_root, filename)
 
         # load YAML file
-        data = _load_yaml(filepath, self.substitute)
+        data = _load_yaml(filepath, extension=True, substitute=self.substitute)
 
         return data
 
@@ -170,6 +170,10 @@ class _YamlLoader(yaml.Loader):
         # check type
         if type(name) is not str:
             raise yaml.YAMLError("sub command arguments should be strings")
+
+        # get and check the variable
+        if self.substitute is None:
+            raise yaml.YAMLError("sub dictionary is cannot be empty")
 
         # get and check the variable
         if name not in self.substitute:
@@ -388,7 +392,7 @@ def _merge_data(data):
     return data
 
 
-def _load_yaml(filename, substitute):
+def _load_yaml(filename, extension=True, substitute=None):
     """
     Load a YAML stream (with custom extensions).
     If required, merge the data (custom merge commands).
@@ -396,7 +400,10 @@ def _load_yaml(filename, substitute):
 
     with open(filename, "r") as fid:
         # create loader
-        loader = _YamlLoader(fid, substitute)
+        if extension:
+            loader = _YamlLoader(fid, substitute)
+        else:
+            loader = yaml.Loader(fid)
 
         # parse, merge, and clean
         try:
@@ -463,7 +470,7 @@ def _write_pickle(filename, data):
         pickle.dump(data, fid)
 
 
-def load_config(filename, substitute=None):
+def load_config(filename, extension=True, substitute=None):
     """
     Load a configuration file (JSON or YAML).
 
@@ -475,6 +482,9 @@ def load_config(filename, substitute=None):
         For YAML files, the extension should be "yaml" or "yml".
         For JSON files, the extension should be "json" or "js".
         For GZIP/JSON files, the extension should be "gzip" or "gz".
+    extension : bool
+        Activate (or not) the YAML extensions.
+        Activate (or not) the JSON extensions.
     substitute : dict
         Dictionary with the substitution.
         The key names are replaces by the values.
@@ -486,17 +496,13 @@ def load_config(filename, substitute=None):
         Python data contained in the file content
     """
 
-    # empty substitution
-    if substitute is None:
-        substitute = dict()
-
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
         data = _load_json(filename, False)
     elif ext in [".gz", ".gzip"]:
         data = _load_json(filename, True)
     elif ext in [".yaml", ".yml"]:
-        data = _load_yaml(filename, substitute)
+        data = _load_yaml(filename, extension=extension, substitute=substitute)
     else:
         raise ValueError("invalid file extension: %s" % filename)
 
