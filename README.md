@@ -34,7 +34,7 @@ The following file extensions are used:
 The JSON/YAML files with the custom extensions are still valid JSON/YAML files.
 
 SciSave is written in Python (NumPy and PyYAML are the only dependencies).
-SciSave is respecting **semantic versioning** (starting from version 1.2).
+SciSave is respecting **semantic versioning** (starting from version 1.4).
 
 ## Warning
 
