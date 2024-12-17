@@ -22,10 +22,12 @@ authors = [{name = "Thomas Guillod", email = "guillod@otvam.ch"}]
 maintainers = [{name = "Thomas Guillod", email = "guillod@otvam.ch"}]
 keywords = [
     "Python",
-    "Timing",
-    "Logging",
-    "Logger",
-    "Log",
+    "Serialization",
+    "Deserialization",
+    "JSON",
+    "YAML",
+    "Pickle",
+    "NumPy",
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
