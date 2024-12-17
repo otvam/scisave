@@ -82,7 +82,7 @@ function clean_data {
   # clean package
   rm -rf dist
   rm -rf build
-  rm -rf scisave.egg-info
+  rm -rf *.egg-info
 
   # clean version file
   rm -rf version.txt
