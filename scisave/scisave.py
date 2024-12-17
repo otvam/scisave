@@ -311,7 +311,7 @@ class _JsonNumPyDecoder(json.JSONDecoder):
             if dtype == "complex":
                 real = np.array(data["real"], dtype=complex).reshape(shape)
                 imag = np.array(data["imag"], dtype=complex).reshape(shape)
-                return real+1j*imag
+                return real + 1j * imag
             elif dtype == "float":
                 return np.array(data, dtype=float).reshape(shape)
             elif dtype == "int":
@@ -398,7 +398,7 @@ def _load_yaml(filename, extension=True, substitute=None):
     If required, merge the data (custom merge commands).
     """
 
-    with open(filename, "r") as fid:
+    with open(filename) as fid:
         # create YAML loader (without or without extensions)
         if extension:
             loader = _YamlLoader(fid, substitute)
@@ -433,7 +433,7 @@ def _load_json(filename, extension=True, compress=False):
         with gzip.open(filename, "rt", encoding="utf-8") as fid:
             data = json.load(fid, cls=cls)
     else:
-        with open(filename, "r") as fid:
+        with open(filename) as fid:
             data = json.load(fid, cls=cls)
 
     return data
