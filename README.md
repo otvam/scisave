@@ -1,4 +1,4 @@
-# SciSave - Data Serialization for Scientific Data
+# SciSave - Serialization/Deserialization for Scientific Data
 
 > * **Repository: [github.com/otvam/scisave](https://github.com/otvam/scisave)**
 > * **PyPi: [pypi.org/project/scisave](https://pypi.org/project/scisave)**
@@ -31,7 +31,8 @@ The following file extensions are used:
 * `.gz, .gzip` - for JSON gzip files
 * `.pck, .pkl, .pickle` - for Pickle files
 
-The JSON/YAML files with the custom extensions are still valid JSON/YAML files.
+The JSON/YAML files with the custom extensions are still valid JSON/YAML files. 
+Pickle is significantly faster than JSON for very large data files.
 
 SciSave is written in Python (NumPy and PyYAML are the only dependencies).
 SciSave is respecting **semantic versioning** (starting from version 1.4).

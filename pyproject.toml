@@ -16,7 +16,7 @@ version_scheme = "guess-next-dev"
 
 [project]
 name = "scisave"
-description = "SciSave - Data Serialization for Scientific Data"
+description = "SciSave - Serialization/Deserialization for Scientific Data"
 license = {text = "BSD-2-Clause"}
 authors = [{name = "Thomas Guillod", email = "guillod@otvam.ch"}]
 maintainers = [{name = "Thomas Guillod", email = "guillod@otvam.ch"}]
