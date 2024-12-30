@@ -1,4 +1,4 @@
-# SciSave - Serialization/Deserialization for Scientific Data
+# SciSave - Serialization for Scientific Data
 
 > * **Repository: [github.com/otvam/scisave](https://github.com/otvam/scisave)**
 > * **PyPi: [pypi.org/project/scisave](https://pypi.org/project/scisave)**
