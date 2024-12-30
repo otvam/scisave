@@ -534,7 +534,7 @@ def load_data(filename):
         The file type is determined by the extension.
         For JSON files, the extension should be "json" or "js".
         For GZIP/JSON files, the extension should be "gzip" or "gz".
-        For Pickle files, the extension should be "pck".
+        For Pickle files, the extension should be "pck" or "pkl" or "pickle".
 
     Returns
     -------
@@ -566,7 +566,7 @@ def write_data(filename, data):
         The file type is determined by the extension.
         For JSON files, the extension should be "json" or "js".
         For GZIP/JSON files, the extension should be "gzip" or "gz".
-        For Pickle files, the extension should be "pck".
+        For Pickle files, the extension should be "pck" or "pkl" or "pickle".
     data : data
         Python data to be saved.
     """
