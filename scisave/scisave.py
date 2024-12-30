@@ -17,7 +17,7 @@ import yaml
 import numpy as np
 
 
-class _YamlLoader(yaml.Loader):
+class _YamlLoader(yaml.SafeLoader):
     """
     This Python class offers extension to the YAML format.
         - parse relative paths (with respect to the YAML file)
@@ -403,7 +403,7 @@ def _load_yaml(filename, extension=True, substitute=None):
         if extension:
             loader = _YamlLoader(fid, substitute)
         else:
-            loader = yaml.Loader(fid)
+            loader = yaml.SafeLoader(fid)
 
         # parse, merge, and clean
         try:
