@@ -29,16 +29,20 @@ class _YamlLoader(yaml.SafeLoader):
         - merge list of lists
     """
 
-    def __init__(self, stream, substitute):
+    def __init__(self, stream, include, substitute):
         """
         Constructor.
         Custom YAML loader subclassing the default loader.
         """
 
         # get the path of the YAML file for relative paths
-        self.path_root = os.path.abspath(stream.name)
-        self.path_root = os.path.dirname(self.path_root)
+        self.path_root = os.path.dirname(os.path.abspath(stream.name))
+
+        # assign the substitution dictionary
         self.substitute = substitute
+
+        # assign the list of included files
+        self.include = include
 
         # flag indicating if any merge commands are used
         self.has_merge = False
@@ -123,6 +127,7 @@ class _YamlLoader(yaml.SafeLoader):
 
         # construct relative path
         filepath = os.path.join(self.path_root, filename)
+        filepath = os.path.abspath(filepath)
 
         return filepath
 
@@ -137,9 +142,17 @@ class _YamlLoader(yaml.SafeLoader):
 
         # construct relative path
         filepath = os.path.join(self.path_root, filename)
+        filepath = os.path.abspath(filepath)
+
+        # check for circular inclusion
+        if filepath in self.include:
+            raise yaml.YAMLError("include command cannot be circular")
+
+        # update the list of included files
+        include_tmp = self.include + [filepath]
 
         # load YAML file
-        data = _load_yaml(filepath, extension=True, substitute=self.substitute)
+        data = _load_yaml(filepath, include_tmp, extension=True, substitute=self.substitute)
 
         return data
 
@@ -392,7 +405,7 @@ def _merge_data(data):
     return data
 
 
-def _load_yaml(filename, extension=True, substitute=None):
+def _load_yaml(filename, include, extension=True, substitute=None):
     """
     Load a YAML stream (with custom extensions).
     If required, merge the data (custom merge commands).
@@ -401,7 +414,7 @@ def _load_yaml(filename, extension=True, substitute=None):
     with open(filename) as fid:
         # create YAML loader (without or without extensions)
         if extension:
-            loader = _YamlLoader(fid, substitute)
+            loader = _YamlLoader(fid, include, substitute)
         else:
             loader = yaml.SafeLoader(fid)
 
@@ -516,7 +529,8 @@ def load_config(filename, extension=True, substitute=None):
     elif ext in [".gz", ".gzip"]:
         data = _load_json(filename, extension=extension, compress=True)
     elif ext in [".yaml", ".yml"]:
-        data = _load_yaml(filename, extension=extension, substitute=substitute)
+        include = [os.path.abspath(filename)]
+        data = _load_yaml(filename, include, extension=extension, substitute=substitute)
     else:
         raise ValueError("invalid file extension: %s" % filename)
 
