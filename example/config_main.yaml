@@ -22,13 +22,11 @@
 "custom_path": !path config_include.yaml
 
 # merge list of lists
-"list":
- !merge_list
+"list": !merge_list
   - [1, 2]
   - [3, 4]
 
 # merge list of dicts
-"dict":
- !merge_dict
+"dict": !merge_dict
   - {"a": 1}
   - {"b": 2}
