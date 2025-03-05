@@ -54,8 +54,8 @@ An example is located in the `example` folder of the repository:
 * `config_main.yaml` YAML configuration file with custom extensions
 * `config_include.yaml` YAML configuration file for include extension
 * `config_schema.yaml` YAML file containing the JSON schema definition
-* `dump.json` JSON plain text file for testing data dumping/loading
-* `dump.gz` JSON plain gzip file for testing data dumping/loading
+* `dump.json` JSON text file for testing data dumping/loading
+* `dump.gz` JSON gzip file for testing data dumping/loading
 * `dump.pickle` Pickle file for testing data dumping/loading
 
 ## Project Links
