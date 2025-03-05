@@ -136,7 +136,7 @@ class _JsonNumPyDecoder(json.JSONDecoder):
 
 def load_json(filename, extension=True, compress=False):
     """
-    Load a JSON file (with extensions).
+    Load a JSON file (with/without custom extensions).
     The JSON file can be a text file or a gzip file.
     """
 
@@ -159,7 +159,7 @@ def load_json(filename, extension=True, compress=False):
 
 def write_json(filename, data, extension=True, compress=False):
     """
-    Write a JSON file (with extensions).
+    Write a JSON file (with/without custom extensions).
     The JSON file can be a text file or a gzip file.
     """
 

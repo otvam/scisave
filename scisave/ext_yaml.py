@@ -279,7 +279,7 @@ class _YamlMerger:
 
 def load_yaml(filename, include, extension=True, substitute=None):
     """
-    Load a YAML stream (with custom extensions).
+    Load a YAML stream (with/without custom extensions).
     If required, merge the data (custom merge commands).
     """
 

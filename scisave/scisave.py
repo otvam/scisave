@@ -10,8 +10,8 @@ __license__ = "BSD License"
 
 import os.path
 import pickle
-from scisave import yaml_ext
-from scisave import json_ext
+from scisave import ext_yaml
+from scisave import ext_json
 
 
 def _load_pickle(filename):
@@ -64,12 +64,12 @@ def load_config(filename, extension=True, substitute=None):
 
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
-        data = json_ext.load_json(filename, extension=extension, compress=False)
+        data = ext_json.load_json(filename, extension=extension, compress=False)
     elif ext in [".gz", ".gzip"]:
-        data = json_ext.load_json(filename, extension=extension, compress=True)
+        data = ext_json.load_json(filename, extension=extension, compress=True)
     elif ext in [".yaml", ".yml"]:
         include = [os.path.abspath(filename)]
-        data = yaml_ext.load_yaml(filename, include, extension=extension, substitute=substitute)
+        data = ext_yaml.load_yaml(filename, include, extension=extension, substitute=substitute)
     else:
         raise ValueError("invalid file extension: %s" % filename)
 
@@ -97,9 +97,9 @@ def load_data(filename):
 
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
-        data = json_ext.load_json(filename, extension=True, compress=False)
+        data = ext_json.load_json(filename, extension=True, compress=False)
     elif ext in [".gz", ".gzip"]:
-        data = json_ext.load_json(filename, extension=True, compress=True)
+        data = ext_json.load_json(filename, extension=True, compress=True)
     elif ext in [".pck", ".pkl", ".pickle"]:
         data = _load_pickle(filename)
     else:
@@ -126,9 +126,9 @@ def write_data(filename, data):
 
     (name, ext) = os.path.splitext(filename)
     if ext in [".json", ".js"]:
-        json_ext.write_json(filename, data, extension=True, compress=False)
+        ext_json.write_json(filename, data, extension=True, compress=False)
     elif ext in [".gz", ".gzip"]:
-        json_ext.write_json(filename, data, extension=True, compress=True)
+        ext_json.write_json(filename, data, extension=True, compress=True)
     elif ext in [".pck", ".pkl", ".pickle"]:
         _write_pickle(filename, data)
     else:
