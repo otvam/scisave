@@ -23,6 +23,9 @@ def _get_checker():
     def get_float(_, instance):
         return np.issubdtype(type(instance), np.floating)
 
+    def get_complex(_, instance):
+        return np.iscomplexobj(instance)
+
     def get_array(_, instance):
         if isinstance(instance, np.ndarray):
             return jsonschema.Draft202012Validator.TYPE_CHECKER.is_type(instance.tolist(), "array")
@@ -32,6 +35,7 @@ def _get_checker():
     # custom type checker
     type_checker = jsonschema.Draft202012Validator.TYPE_CHECKER
     type_checker = type_checker.redefine("number", get_float)
+    type_checker = type_checker.redefine("complex", get_complex)
     type_checker = type_checker.redefine("integer", get_int)
     type_checker = type_checker.redefine("array", get_array)
 
