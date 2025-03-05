@@ -28,6 +28,10 @@ if __name__ == "__main__":
     print("======================== CONFIG")
     print(tmp)
 
+    # validate the configuration data with a schema
+    schema = scisave.load_config("config_schema.yaml", extension=True, substitute=substitute)
+    scisave.validate_schema(tmp, schema, extension=True)
+
     # create a data with complex numbers and arrays
     data = {
         "complex_scalar": 3 + 4j,
