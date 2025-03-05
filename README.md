@@ -10,22 +10,27 @@
 * Specially targeted for **scientific applications**.
 * Load **JSON/YAML configuration files**. 
 * Load and write **JSON/Pickle data files**.
+* Validate data with **JSON schemas**.
 
-For **YAML** files, the following **custom extensions** are used:
-* `!path` - parse relative paths (with respect to the YAML file).
-* `!include` - include other YAML files (recursion possible).
-* `!eval` - evaluate a Python literal (using literal_eval).
-* `!env` - substitute YAML strings with values from environment variables.
-* `!sub` - substitute YAML strings with values from a provided dictionary.
-* `!merge_dict` - merge a list of dicts.
-* `!merge_list` - merge a list of lists.
+For **YAML files**, the following **custom extensions** are used:
+*  Parse relative paths with respect to the YAML file (`!path`).
+*  Include other YAML files into the YAML file (`!include`).
+*  Evaluate a Python literal using literal_eval (`!eval`).
+*  Substitute YAML strings with values from environment variables (`!env`).
+*  Substitute YAML strings with values from a provided dictionary (`!sub`).
+*  Merge a list of dicts (`!merge_dict`).
+*  Merge a list of lists (`!merge_list`).
 
-For **JSON** files, the following **custom extensions** are used:
+For **JSON files**, the following **custom extensions** are used:
 * Allows the serialization/deserialization of complex numbers (`__complex__`).
 * Allows the serialization/deserialization of NumPy arrays (`__numpy__`).
 * Allows the serialization/deserialization as/from text and gzip files 
 
-The following file extensions are used:
+For **JSON schemas**, the following **custom extensions** are used:
+* Handling NumPy types (integer, floating, and complex). 
+* Handling NumPy multidimensional arrays.
+
+The following **file extensions** are used:
 * `.yaml, .yml` - for YAML files
 * `.json, .js` - for JSON text files
 * `.gz, .gzip` - for JSON gzip files
@@ -34,7 +39,7 @@ The following file extensions are used:
 The JSON/YAML files with the custom extensions are still valid JSON/YAML files. 
 Pickle is significantly faster than JSON for very large data files.
 
-SciSave is written in Python (NumPy and PyYAML are the only dependencies).
+SciSave is written in Python (NumPy, PyYAML, and jsonschema are the only dependencies).
 SciSave is respecting **semantic versioning** (starting from version 1.4).
 
 ## Warning

@@ -1,5 +1,7 @@
 """
 Module for validating data with JSON schemas (with extensions).
+    - Handling NumPy types (integer, floating, and complex).
+    - Handling NumPy multidimensional arrays.
 """
 
 __author__ = "Thomas Guillod"
@@ -12,9 +14,7 @@ import jsonschema
 
 def _get_checker():
     """
-    Create a schema type checker.
-    Validate NumPy integer and floating.
-    Cast NumPy arrays as lists for the type check.
+    Create a schema type checker with the NumPy extensions.
     """
 
     def get_int(_, instance):

@@ -1,5 +1,12 @@
 """
 Module for deserialization of YAML files (with extensions).
+    - Parse relative paths with respect to the YAML file (`!path`).
+    - Include other YAML files into the YAML file (`!include`).
+    - Evaluate a Python literal using literal_eval (`!eval`).
+    - Substitute YAML strings with values from environment variables (`!env`).
+    - Substitute YAML strings with values from a provided dictionary (`!sub`).
+    - Merge a list of dicts (`!merge_dict`).
+    - Merge a list of lists (`!merge_list`).
 """
 
 __author__ = "Thomas Guillod"

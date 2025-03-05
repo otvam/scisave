@@ -1,7 +1,8 @@
 """
 Module for serialization and deserialization.
-    - load JSON/YAML configuration files
-    - load and write JSON/Pickle data files
+    - Load JSON/YAML configuration files.
+    - Load and write JSON/Pickle data files.
+    - Validate data with JSON schemas.
 """
 
 __author__ = "Thomas Guillod"
@@ -12,6 +13,7 @@ import os.path
 import pickle
 from scisave import ext_yaml
 from scisave import ext_json
+from scisave import ext_schema
 
 
 def _load_pickle(filename):
@@ -133,3 +135,21 @@ def write_data(filename, data):
         _write_pickle(filename, data)
     else:
         raise ValueError("invalid file extension: %s" % filename)
+
+
+def validate_schema(data, schema, extension=True):
+    """
+    Validate data with a JSON schema.
+
+    Parameters
+    ----------
+    data : data
+        Python data to be validated.
+    schema : schema
+        JSON schema used to validate the data.
+    extension : bool
+        Activate (or not) the NumPy extensions.
+        The extensions handle NumPy types and arrays.
+    """
+
+    ext_schema.validate_schema(data, schema, extension=extension)

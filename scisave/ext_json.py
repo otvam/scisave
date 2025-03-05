@@ -1,5 +1,8 @@
 """
 Module for serialization and deserialization of JSON files (with extensions).
+    - Allows the serialization/deserialization of complex numbers (`__complex__`).
+    - Allows the serialization/deserialization of NumPy arrays (`__numpy__`).
+    - Allows the serialization/deserialization as/from text and gzip files
 """
 
 __author__ = "Thomas Guillod"
