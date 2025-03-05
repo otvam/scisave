@@ -67,4 +67,4 @@ def validate_schema(data, schema, extension=True):
     schema_validator = _get_validator(extension)
 
     # validate schema
-    schema_validator(schema=schema).validate(data)
+    schema_validator(schema).validate(data)
