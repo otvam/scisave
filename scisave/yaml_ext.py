@@ -238,14 +238,14 @@ class _YamlMerger:
         if self.data_type == "dict":
             res = {}
             for data in self.data_list:
-                data = _merge_data(data)
+                data = _YamlMerger.merge(data)
                 if type(data) is not dict:
                     raise yaml.YAMLError("merge_dict cannot only merge dictionaries")
                 res.update(data)
         elif self.data_type == "list":
             res = []
             for data in self.data_list:
-                data = _merge_data(data)
+                data = _YamlMerger.merge(data)
                 if type(data) is not list:
                     raise yaml.YAMLError("merge_list cannot only merge lists")
                 res += data
@@ -255,25 +255,26 @@ class _YamlMerger:
         return res
 
 
-def _merge_data(data):
-    """
-    Walk through the data recursively and merge it.
-    Find the merge objects and replace them with merged data.
-    This function is used for the YAML merge extensions.
-    """
+    @staticmethod
+    def merge(data):
+        """
+        Walk through the data recursively and merge it.
+        Find the merge objects and replace them with merged data.
+        This function is used for the YAML merge extensions.
+        """
 
-    if type(data) is dict:
-        for tag, val in data.items():
-            data[tag] = _merge_data(val)
-    elif type(data) is list:
-        for idx, val in enumerate(data):
-            data[idx] = _merge_data(val)
-    elif type(data) is _YamlMerger:
-        data = data.extract()
-    else:
-        pass
+        if type(data) is dict:
+            for tag, val in data.items():
+                data[tag] = _YamlMerger.merge(val)
+        elif type(data) is list:
+            for idx, val in enumerate(data):
+                data[idx] = _YamlMerger.merge(val)
+        elif type(data) is _YamlMerger:
+            data = data.extract()
+        else:
+            pass
 
-    return data
+        return data
 
 
 def load_yaml(filename, include, extension=True, substitute=None):
@@ -293,7 +294,7 @@ def load_yaml(filename, include, extension=True, substitute=None):
         try:
             data = loader.get_single_data()
             if loader.has_merge:
-                data = _merge_data(data)
+                data = _YamlMerger.merge(data)
         finally:
             loader.dispose()
 
