@@ -261,7 +261,6 @@ class _YamlMerger:
 
         return res
 
-
     @staticmethod
     def merge(data):
         """
