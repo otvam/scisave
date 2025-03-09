@@ -142,6 +142,7 @@ def write_msgpack(filename, data, extension=True):
 
     return data
 
+
 def loads(data, extension=True):
     """
     Deserialize a MessagePack object (with/without custom extensions).
@@ -157,6 +158,7 @@ def loads(data, extension=True):
     data = msgpack.loads(data, object_hook=fct)
 
     return data
+
 
 def dumps(data, extension=True):
     """
