@@ -51,6 +51,7 @@ SciSave is respecting **semantic versioning** (starting from version 1.4).
 
 An example is located in the `example` folder of the repository:
 * `run_data.py` contains an example file for the loader/dumper
+* `run_bench.py` contains a simple benchmark for the different formats
 * `config_main.yaml` YAML configuration file with custom extensions
 * `config_include.yaml` YAML configuration file for include extension
 * `config_schema.yaml` YAML file containing the JSON schema definition
