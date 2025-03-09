@@ -1,7 +1,7 @@
 """
 Module for serialization and deserialization.
     - Load JSON/YAML configuration files.
-    - Load and write JSON/Pickle data files.
+    - Load and write JSON/MessagePack/Pickle data files.
     - Validate data with JSON schemas.
 """
 
@@ -13,6 +13,7 @@ import os.path
 import pickle
 from scisave import ext_yaml
 from scisave import ext_json
+from scisave import ext_msgpack
 from scisave import ext_schema
 
 
@@ -89,6 +90,7 @@ def load_data(filename):
         The file type is determined by the extension.
         For JSON files, the extension should be "json" or "js".
         For GZIP/JSON files, the extension should be "gzip" or "gz".
+        For MessagePack files, the extension should be "mpk" or "msg" or "msgpack".
         For Pickle files, the extension should be "pck" or "pkl" or "pickle".
 
     Returns
@@ -102,6 +104,8 @@ def load_data(filename):
         data = ext_json.load_json(filename, extension=True, compress=False)
     elif ext in [".gz", ".gzip"]:
         data = ext_json.load_json(filename, extension=True, compress=True)
+    elif ext in [".mpk", ".msg", ".msgpack"]:
+        data = ext_msgpack.load_msgpack(filename, extension=True)
     elif ext in [".pck", ".pkl", ".pickle"]:
         data = _load_pickle(filename)
     else:
@@ -121,6 +125,7 @@ def write_data(filename, data):
         The file type is determined by the extension.
         For JSON files, the extension should be "json" or "js".
         For GZIP/JSON files, the extension should be "gzip" or "gz".
+        For MessagePack files, the extension should be "mpk" or "msg" or "msgpack".
         For Pickle files, the extension should be "pck" or "pkl" or "pickle".
     data : data
         Python data to be saved.
@@ -131,6 +136,8 @@ def write_data(filename, data):
         ext_json.write_json(filename, data, extension=True, compress=False)
     elif ext in [".gz", ".gzip"]:
         ext_json.write_json(filename, data, extension=True, compress=True)
+    elif ext in [".mpk", ".msg", ".msgpack"]:
+        ext_msgpack.write_msgpack(filename, data, extension=True)
     elif ext in [".pck", ".pkl", ".pickle"]:
         _write_pickle(filename, data)
     else:

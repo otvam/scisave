@@ -54,6 +54,12 @@ if __name__ == "__main__":
     print("======================== JSON/GZIP")
     print(tmp)
 
+    # dump and load the data as MessagePack
+    scisave.write_data("dump.msgpack", data)
+    tmp = scisave.load_data("dump.msgpack")
+    print("======================== MSGPACK")
+    print(tmp)
+
     # dump and load the data as Pickle
     scisave.write_data("dump.pickle", data)
     tmp = scisave.load_data("dump.pickle")
