@@ -141,3 +141,35 @@ def write_msgpack(filename, data, extension=True):
         msgpack.dump(data, fid, default=fct)
 
     return data
+
+def loads(data, extension=True):
+    """
+    Deserialize a MessagePack object (with/without custom extensions).
+    """
+
+    # create a decoder (without or without extensions)
+    if extension:
+        fct = _decode_object
+    else:
+        fct = None
+
+    # deserialize the MessagePack data
+    data = msgpack.loads(data, object_hook=fct)
+
+    return data
+
+def dumps(data, extension=True):
+    """
+    Serialize a MessagePack object (with/without custom extensions).
+    """
+
+    # create an encoder (without or without extensions)
+    if extension:
+        fct = _encode_object
+    else:
+        fct = None
+
+    # serialize the MessagePack data
+    data = msgpack.dumps(data, default=fct)
+
+    return data

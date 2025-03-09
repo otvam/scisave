@@ -177,3 +177,47 @@ def write_json(filename, data, extension=True, compress=False):
             json.dump(data, fid, cls=cls, indent=4)
 
     return data
+
+
+def loads(data, extension=True, compress=False):
+    """
+    Deserialize a JSON object (with/without custom extensions).
+    """
+
+    # create a decoder (without or without extensions)
+    if extension:
+        cls = _JsonNumPyDecoder
+    else:
+        cls = json.JSONDecoder
+
+    # deserialize the JSON data
+    if compress:
+        data = gzip.decompress(data)
+        data = data.decode("utf-8")
+        data = json.loads(data, cls=cls)
+    else:
+        data = json.loads(data, cls=cls)
+
+    return data
+
+
+def dumps(data, extension=True, compress=False):
+    """
+    Serialize a JSON object (with/without custom extensions).
+    """
+
+    # create an encoder (without or without extensions)
+    if extension:
+        cls = _JsonNumPyEncoder
+    else:
+        cls = json.JSONEncoder
+
+    # serialize the JSON data
+    if compress:
+        data = json.dumps(data, cls=cls, indent=None)
+        data = data.encode("utf-8")
+        data = gzip.compress(data)
+    else:
+        data = json.dumps(data, cls=cls, indent=4)
+
+    return data
