@@ -17,8 +17,6 @@ import numpy as np
 class _JsonNumPyEncoder(json.JSONEncoder):
     """
     This Python class offers extension to the JSON format (encoder).
-        - encode NumPy scalar types
-        - encode NumPy array types
     """
 
     def __init__(self, **kwargs):
@@ -89,8 +87,6 @@ class _JsonNumPyEncoder(json.JSONEncoder):
 class _JsonNumPyDecoder(json.JSONDecoder):
     """
     This Python class offers extension to the JSON format (decoder).
-        - decode NumPy scalar types
-        - decode NumPy array types
     """
 
     def __init__(self, **kwargs):
@@ -143,7 +139,7 @@ def load_json(filename, extension=True, compress=False):
     The JSON file can be a text file or a gzip file.
     """
 
-    # create JSON decoder (without or without extensions)
+    # create a decoder (without or without extensions)
     if extension:
         cls = _JsonNumPyDecoder
     else:
@@ -166,7 +162,7 @@ def write_json(filename, data, extension=True, compress=False):
     The JSON file can be a text file or a gzip file.
     """
 
-    # create JSON encoder (without or without extensions)
+    # create an encoder (without or without extensions)
     if extension:
         cls = _JsonNumPyEncoder
     else:
