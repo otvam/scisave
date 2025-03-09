@@ -24,13 +24,13 @@ if __name__ == "__main__":
     }
 
     # load the configuration file with custom YAML extensions
-    tmp = scisave.load_config("config_main.yaml", extension=True, substitute=substitute)
+    config_tmp = scisave.load_config("config_main.yaml", extension=True, substitute=substitute)
     print("======================== CONFIG")
-    print(tmp)
+    print(config_tmp)
 
     # validate the configuration data with a schema
     schema = scisave.load_config("config_schema.yaml", extension=True, substitute=substitute)
-    scisave.validate_schema(tmp, schema, extension=True)
+    scisave.validate_schema(config_tmp, schema, extension=True)
 
     # create a data with complex numbers and arrays
     data = {
@@ -44,26 +44,34 @@ if __name__ == "__main__":
 
     # dump and load the data as JSON/TXT
     scisave.write_data("dump.json", data)
-    tmp = scisave.load_data("dump.json")
+    data_file = scisave.load_data("dump.json")
+    data_obj = scisave.loads("json", scisave.dumps("json", data))
     print("======================== JSON/TXT")
-    print(tmp)
+    print(data_file)
+    print(data_obj)
 
     # dump and load the data as JSON/GZIP
     scisave.write_data("dump.gz", data)
-    tmp = scisave.load_data("dump.gz")
+    data_file = scisave.load_data("dump.gz")
+    data_obj = scisave.loads("gzip", scisave.dumps("gzip", data))
     print("======================== JSON/GZIP")
-    print(tmp)
+    print(data_file)
+    print(data_obj)
 
     # dump and load the data as MessagePack
-    scisave.write_data("dump.msgpack", data)
-    tmp = scisave.load_data("dump.msgpack")
+    scisave.write_data("dump.mpk", data)
+    data_file = scisave.load_data("dump.mpk")
+    data_obj = scisave.loads("msgpack", scisave.dumps("msgpack", data))
     print("======================== MSGPACK")
-    print(tmp)
+    print(data_file)
+    print(data_obj)
 
     # dump and load the data as Pickle
-    scisave.write_data("dump.pickle", data)
-    tmp = scisave.load_data("dump.pickle")
+    scisave.write_data("dump.pkl", data)
+    data_file = scisave.load_data("dump.pkl")
+    data_obj = scisave.loads("pickle", scisave.dumps("pickle", data))
     print("======================== PICKLE")
-    print(tmp)
+    print(data_file)
+    print(data_obj)
 
     sys.exit(0)

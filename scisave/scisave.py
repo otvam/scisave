@@ -17,28 +17,6 @@ from scisave import ext_msgpack
 from scisave import ext_schema
 
 
-def _load_pickle(filename):
-    """
-    Load a pickle file.
-    """
-
-    # load the Pickle file
-    with open(filename, "rb") as fid:
-        data = pickle.load(fid)
-
-    return data
-
-
-def _write_pickle(filename, data):
-    """
-    Write a pickle file.
-    """
-
-    # save the Pickle file
-    with open(filename, "wb") as fid:
-        pickle.dump(data, fid)
-
-
 def load_config(filename, extension=True, substitute=None):
     """
     Load a configuration file (JSON or YAML).
@@ -81,7 +59,7 @@ def load_config(filename, extension=True, substitute=None):
 
 def load_data(filename):
     """
-    Load a data file (JSON or Pickle).
+    Load a data file (JSON or MessagePack or Pickle).
 
     Parameters
     ----------
@@ -107,7 +85,8 @@ def load_data(filename):
     elif ext in [".mpk", ".msg", ".msgpack"]:
         data = ext_msgpack.load_msgpack(filename, extension=True)
     elif ext in [".pck", ".pkl", ".pickle"]:
-        data = _load_pickle(filename)
+        with open(filename, "rb") as fid:
+            data = pickle.load(fid)
     else:
         raise ValueError("invalid file extension: %s" % filename)
 
@@ -116,7 +95,7 @@ def load_data(filename):
 
 def write_data(filename, data):
     """
-    Write a data file (JSON or Pickle).
+    Write a data file (JSON or MessagePack or Pickle).
 
     Parameters
     ----------
@@ -139,9 +118,68 @@ def write_data(filename, data):
     elif ext in [".mpk", ".msg", ".msgpack"]:
         ext_msgpack.write_msgpack(filename, data, extension=True)
     elif ext in [".pck", ".pkl", ".pickle"]:
-        _write_pickle(filename, data)
+        with open(filename, "wb") as fid:
+            pickle.dump(data, fid)
     else:
         raise ValueError("invalid file extension: %s" % filename)
+
+
+def loads(format, data):
+    """
+    Deserialize an object with different format (JSON or MessagePack or Pickle).
+
+    Parameters
+    ----------
+    format : string
+        Name of the serialization format ("json" or "gzip" or "msgpack" or "pickle").
+    data : data
+        Python data to be deserialized.
+
+    Returns
+    -------
+    data : data
+        Deserialized Python data
+    """
+
+    if format == "json":
+        return ext_json.loads(data, extension=True, compress=False)
+    if format == "gzip":
+        return ext_json.loads(data, extension=True, compress=True)
+    elif format == "msgpack":
+        return ext_msgpack.loads(data, extension=True)
+    elif format == "pickle":
+        return pickle.loads(data)
+    else:
+        raise ValueError("invalid format: %s" % format)
+
+
+def dumps(format, data):
+    """
+    Serialize an object with different format (JSON or MessagePack or Pickle).
+
+    Parameters
+    ----------
+    format : string
+        Name of the serialization format ("json" or "gzip" or "msgpack" or "pickle").
+    data : data
+        Python data to be serialized.
+
+    Returns
+    -------
+    data : data
+        Serialized Python data
+    """
+
+    if format == "json":
+        return ext_json.dumps(data, extension=True, compress=False)
+    if format == "gzip":
+        return ext_json.dumps(data, extension=True, compress=True)
+    elif format == "msgpack":
+        return ext_msgpack.dumps(data, extension=True)
+    elif format == "pickle":
+        return pickle.dumps(data)
+    else:
+        raise ValueError("invalid format: %s" % format)
 
 
 def validate_schema(data, schema, extension=True):
