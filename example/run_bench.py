@@ -19,7 +19,7 @@ if __name__ == "__main__":
     number = 5
 
     # list with the parsers to be benchmarked
-    filename_list = ["tmp.gz", "tmp.json", "tmp.mpk", "tmp.pkl"]
+    ext_list = ["gz", "json", "mpk", "pkl"]
 
     # create a dummy test data
     data = [[random.random() for _ in range(500)] for _ in range(500)]
@@ -33,22 +33,30 @@ if __name__ == "__main__":
         scisave.write_data(filename, data)
 
     # run the benchmark
-    for filename in filename_list:
-        print("======================== TIME / %s" % filename)
+    for ext in ext_list:
+        print("======================== %s" % ext)
+
+        # name of the temporary file
+        filename_reference = "reference.%s" % ext
+        filename_benchmark = "benchmark.%s" % ext
+
+        # write the data
+        fct_write(filename_reference)
 
         # time the write and load functions
-        time_write = timeit.timeit(functools.partial(fct_write, filename), number=number)
-        time_load = timeit.timeit(functools.partial(fct_load, filename), number=number)
+        time_load = timeit.timeit(functools.partial(fct_load, filename_reference), number=number)
+        time_write = timeit.timeit(functools.partial(fct_write, filename_benchmark), number=number)
 
         # check the file size
-        size = os.path.getsize(filename)
+        size = os.path.getsize(filename_reference)
 
         # print the results
-        print("write = %.3f" % (time_write / number))
         print("load = %.3f" % (time_load / number))
+        print("write = %.3f" % (time_write / number))
         print("size = %.3f kB" % (size / 1024))
 
-        # remove the generated file
-        os.remove(filename)
+        # remove the generated files
+        os.remove(filename_reference)
+        os.remove(filename_benchmark)
 
     sys.exit(0)
