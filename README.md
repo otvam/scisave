@@ -8,8 +8,8 @@
 
 **SciSave** is a **Python serialization/deserialization** module:
 * Specially targeted for **scientific applications**.
-* Load **JSON/YAML configuration files**. 
-* Load and write **JSON/Pickle data files**.
+* Load and write **JSON/MessagePack/Pickle data files**.
+* Load **JSON/YAML configuration files**.
 * Validate data with **JSON schemas**.
 
 For **YAML files**, the following **custom extensions** are used:
@@ -26,6 +26,10 @@ For **JSON files**, the following **custom extensions** are used:
 * Allows the serialization/deserialization of NumPy arrays (`__numpy__`).
 * Allows the serialization/deserialization as/from text and gzip files 
 
+For **MessagePack files**, the following **custom extensions** are used:
+* Allows the serialization/deserialization of complex numbers (`__complex__`).
+* Allows the serialization/deserialization of NumPy arrays (`__numpy__`).
+
 For **JSON schemas**, the following **custom extensions** are used:
 * Handling NumPy types (integer, floating, and complex). 
 * Handling NumPy multidimensional arrays.
@@ -34,12 +38,13 @@ The following **file extensions** are used:
 * `.yaml, .yml` - for YAML files
 * `.json, .js` - for JSON text files
 * `.gz, .gzip` - for JSON gzip files
+* `.mpk, .msg", .msgpack` - for MessagePack files
 * `.pck, .pkl, .pickle` - for Pickle files
 
-The JSON/YAML files with the custom extensions are still valid JSON/YAML files. 
-Pickle is significantly faster than JSON for very large data files.
+The JSON/YAML/MessagePack files with the custom extensions are still valid files.
+Pickle/MessagePack is typically faster than JSON for very large data files.
 
-SciSave is written in Python (NumPy, PyYAML, and jsonschema are the only dependencies).
+SciSave is written in Python (NumPy, PyYAML, msgpack, and jsonschema are the only dependencies).
 SciSave is respecting **semantic versioning** (starting from version 1.4).
 
 ## Warning
