@@ -1,7 +1,7 @@
 """
 Module for serialization and deserialization.
-    - Load JSON/YAML configuration files.
     - Load and write JSON/MessagePack/Pickle data files.
+    - Load JSON/YAML configuration files.
     - Validate data with JSON schemas.
 """
 

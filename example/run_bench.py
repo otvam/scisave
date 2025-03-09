@@ -15,9 +15,11 @@ import scisave
 
 
 if __name__ == "__main__":
-    # set the parameters
-    number = 5  # number of repeats for the timing
-    filename_list = ["tmp.gz", "tmp.json", "tmp.mpk", "tmp.pkl"]  # parser to be checked
+    # number of repeats for the benchmark
+    number = 5
+
+    # list with the parsers to be benchmarked
+    filename_list = ["tmp.gz", "tmp.json", "tmp.mpk", "tmp.pkl"]
 
     # create a dummy test data
     data = [[random.random() for _ in range(500)] for _ in range(500)]
@@ -46,7 +48,7 @@ if __name__ == "__main__":
         print("load = %.3f" % (time_load / number))
         print("size = %.3f kB" % (size / 1024))
 
-        # clean the file
+        # remove the generated file
         os.remove(filename)
 
     sys.exit(0)
